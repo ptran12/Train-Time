@@ -48,17 +48,35 @@ $("#add-train-btn").on("click", function(event) {
 });
 
 ///COLLECTING DATA FROM FIREBASE/////
-database.ref().on("child_added", function(snapshot){
+database.ref().on("child_added", function(tView){
 
     //Stores everything into a variable 
-    var trainName = snapshot.val().name;
-    var destination = snapshot.val().trainDes;
-    var firstTime = snapshot.val().time;
-    var trainFrequency = snapshot.val().frequency;
+    var trainName = tView.val().name;
+    var destination = tView.val().trainDes;
+    var firstTime = tView.val().time;
+    var trainFrequency = tView.val().frequency;
 
     console.log(trainName);
     console.log(destination);
     console.log(firstTime);
     console.log(trainFrequency);
 
+    var trainR = moment().diff(moment.unix(firstTime),"minutes")%trainFrequency;
+    var minutes = trainFrequency - trainR;
+    var arrival = moment().add(minutes, "m").format("hh:mm A");
+
+    // console.log(trainR);
+    // console.log(minutes);
+    // console.log(arrival);
+
+    var newRow = $("<tr>").append(
+        $("<td>").text(trainName),
+        $("<td>").text(destination),
+        $("<td>").text(firstTime),
+        $("<td>").text(arrival),
+        $("<td>").text(minutes)
+      );
+    
+      $("#train-table > tbody").append(newRow);
+    
 })
