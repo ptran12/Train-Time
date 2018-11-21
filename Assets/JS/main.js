@@ -19,7 +19,7 @@ $("#add-train-btn").on("click", function(event) {
     ///USER INPUT///////
     var trainName = $("#train-name-input").val().trim();
     var destination = $("#destination-input").val().trim();
-    var firstTime = $("#train-time-input").val().trim();
+    var firstTime = moment($("#train-time-input").val().trim(), "HH:mm").subtract(10, "years").format("x"); ///moment JS 
     var trainFrequency = $("#frequency-input").val().trim();
 
     ///////////Object to hold train data//////////////
@@ -46,3 +46,19 @@ $("#add-train-btn").on("click", function(event) {
     $("#frequency-input").val("");
 
 });
+
+///COLLECTING DATA FROM FIREBASE/////
+database.ref().on("child_added", function(snapshot){
+
+    //Stores everything into a variable 
+    var trainName = snapshot.val().name;
+    var destination = snapshot.val().trainDes;
+    var firstTime = snapshot.val().time;
+    var trainFrequency = snapshot.val().frequency;
+
+    console.log(trainName);
+    console.log(destination);
+    console.log(firstTime);
+    console.log(trainFrequency);
+
+})
